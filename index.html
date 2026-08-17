@@ -5,39 +5,72 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Motivation Hub</title>
   <meta name="description" content="Free daily motivation, habits, and goal planning tools." />
+  <meta name="theme-color" content="#1D4ED8" />
+
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icon-512.png" />
+
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Motivation Hub" />
+
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
+  <!-- TOP INSTALL PROMPT -->
+  <div id="installBanner" class="install-banner hidden">
+    <div class="install-banner-inner">
+      <div class="install-text">
+        <strong>Install The Motivation Hub</strong>
+        <span id="installHint">Daily motivation, one tap from your home screen.</span>
+      </div>
+      <div class="install-actions">
+        <button id="installBtn" class="btn-install">Install</button>
+        <button id="installClose" class="btn-close" aria-label="Close">✕</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP NAVBAR WITH DROPDOWN -->
   <header class="navbar">
     <div class="container navbar-inner">
-      <a href="index.html" class="logo">
-        The Motivation <span>Hub</span>
-      </a>
+      <a href="#home" class="logo">The Motivation <span>Hub</span></a>
+      <button id="menuBtn" class="menu-btn" aria-label="Open menu">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="menu-icon">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+      </button>
     </div>
+
+    <nav id="dropdownMenu" class="dropdown hidden">
+      <a href="#home">Home</a>
+      <a href="#motivation">Daily Motivation</a>      <a href="#habits">Habit Tracker</a>
+      <a href="#goals">Goal Planner</a>
+      <a href="#store">Ebook Store</a>
+    </nav>
   </header>
 
   <main>
-    <section class="hero">
+    <!-- HERO -->
+    <section id="home" class="hero">
       <div class="container">
         <h1>Master Your Day. Build Your Future.</h1>
         <p>
           Simple free tools to help you stay disciplined, build habits,
           and plan for success.
         </p>
-
-        <a href="#motivation" class="btn btn-primary">
-          Get Today's Motivation
-        </a>
+        <a href="#motivation" class="btn btn-primary">Get Today's Motivation</a>
       </div>
     </section>
 
+    <!-- MOTIVATION -->
     <section id="motivation" class="section">
       <div class="container">
         <h2>Daily Motivation Generator</h2>
-        <p class="section-subtitle">
-          Every quote comes with a practical action step.
-        </p>
+        <p class="section-subtitle">Every quote comes with a practical action step.</p>
 
         <div class="card motivation-card">
           <span id="quoteCategory" class="badge">Discipline</span>
@@ -47,6 +80,7 @@
           </blockquote>
 
           <p id="quoteAuthor" class="quote-author">— Unknown</p>
+
           <div class="action-box">
             <h3>Your Action Step</h3>
             <p id="actionStep">
@@ -55,53 +89,63 @@
           </div>
 
           <div class="button-group">
-            <button id="generateBtn" class="btn btn-primary">
-              Generate Another
-            </button>
-
-            <button id="copyBtn" class="btn btn-secondary">
-              Copy
-            </button>
-
-            <button id="shareBtn" class="btn btn-secondary">
-              Share
-            </button>
+            <button id="generateBtn" class="btn btn-primary">Generate Another</button>
+            <button id="copyBtn" class="btn btn-secondary">Copy</button>
+            <button id="shareBtn" class="btn btn-secondary">Share</button>
           </div>
         </div>
       </div>
     </section>
-
-    <section class="section tools-section">
+    <!-- HABITS -->
+    <section id="habits" class="section tools-section">
       <div class="container">
-        <h2>Coming Soon</h2>
+        <h2>Habit Tracker</h2>
+        <p class="section-subtitle">Build streaks that build your life.</p>
+        <div class="card coming-soon">
+          <p>✅ Coming in the next update: daily check-ins, streak counter, and badges.</p>
+        </div>
+      </div>
+    </section>
 
-        <div class="tools-grid">
-          <div class="tool-card">
-            <h3>Habit Tracker</h3>
-            <p>Track daily habits and build streaks.</p>
-          </div>
+    <!-- GOALS -->
+    <section id="goals" class="section">
+      <div class="container">
+        <h2>Goal Planner</h2>
+        <p class="section-subtitle">Turn dreams into daily tasks.</p>
+        <div class="card coming-soon">
+          <p>🎯 Coming in the next update: yearly, monthly, weekly, and daily planning.</p>
+        </div>
+      </div>
+    </section>
 
-          <div class="tool-card">
-            <h3>Goal Planner</h3>
-            <p>Turn goals into daily actions.</p>
-          </div>
-
-          <div class="tool-card">
-            <h3>Ebook Store</h3>
-            <p>Helpful guides for discipline and success.</p>
-          </div>
+    <!-- STORE -->
+    <section id="store" class="section tools-section">
+      <div class="container">
+        <h2>Ebook Store</h2>
+        <p class="section-subtitle">Guides that go deeper than quotes.</p>
+        <div class="card coming-soon">
+          <p>📚 Coming soon: discipline, focus, and goal-setting ebooks.</p>
         </div>
       </div>
     </section>
   </main>
 
+  <!-- BOTTOM MENU -->
+  <nav class="bottom-nav">
+    <a href="#home" class="active"><span class="nav-icon">🏠</span>Home</a>
+    <a href="#motivation"><span class="nav-icon">💡</span>Motivation</a>
+    <a href="#habits"><span class="nav-icon">✅</span>Habits</a>
+    <a href="#goals"><span class="nav-icon">🎯</span>Goals</a>
+    <a href="#store"><span class="nav-icon">📚</span>Store</a>
+  </nav>
+
   <footer class="footer">
-    <div class="container">      <p><strong>The Motivation Hub</strong></p>
+    <div class="container">
+      <p><strong>The Motivation Hub</strong></p>
       <p>Helping people build better habits, one day at a time.</p>
       <p class="credits">
         Platform Owner: Abiodun Goodness<br />
-        Developer: Akinsuroju Olubunmi
-      </p>
+        Developer: Akinsuroju Olubunmi      </p>
     </div>
   </footer>
 
