@@ -121,21 +121,31 @@
       </div>
     </section>
 
-    <!-- GOALS -->
+    <!-- GOAL PLANNER -->
     <section id="goals" class="section">
       <div class="container">
         <h2>Goal Planner</h2>
         <p class="section-subtitle">Turn dreams into daily tasks.</p>
-        <div class="card coming-soon">
-          <p>🎯 Coming in the next update: yearly, monthly, weekly, and daily planning.</p>
+
+        <div class="print-header">
+          <h2>The Motivation Hub — My Plan</h2>
+          <p id="printDate"></p>
+        </div>
+
+        <div class="card goals-card">
+          <div id="goalTabs" class="goal-tabs"></div>
+          <div id="goalPanels"></div>
+          <p id="goalMessage" class="habit-message hidden"></p>
+          <div class="goal-tools">
+            <button id="printPlanBtn" class="btn btn-secondary">🖨️ Print / Save My Plan</button>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- STORE -->
     <section id="store" class="section tools-section">
-      <div class="container">
-        <h2>Ebook Store</h2>
+      <div class="container">        <h2>Ebook Store</h2>
         <p class="section-subtitle">Guides that go deeper than quotes.</p>
         <div class="card coming-soon">
           <p>📚 Coming soon: discipline, focus, and goal-setting ebooks.</p>
@@ -145,7 +155,8 @@
   </main>
 
   <!-- BOTTOM MENU -->
-  <nav class="bottom-nav">    <a href="#home" class="active"><span class="nav-icon">🏠</span>Home</a>
+  <nav class="bottom-nav">
+    <a href="#home" class="active"><span class="nav-icon">🏠</span>Home</a>
     <a href="#motivation"><span class="nav-icon">💡</span>Motivation</a>
     <a href="#habits"><span class="nav-icon">✅</span>Habits</a>
     <a href="#goals"><span class="nav-icon">🎯</span>Goals</a>
