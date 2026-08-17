@@ -408,3 +408,173 @@ habitList.addEventListener("click", function (event) {
 });
 
 renderHabits();
+/* ================= GOAL PLANNER ================= */
+
+const GOALS_KEY = "tmh_goals";
+
+const goalTabs = document.getElementById("goalTabs");
+const goalPanels = document.getElementById("goalPanels");
+const goalMessage = document.getElementById("goalMessage");
+const printPlanBtn = document.getElementById("printPlanBtn");
+const printDate = document.getElementById("printDate");
+
+const GOAL_LEVELS = [
+  { key: "daily", label: "Day", title: "Daily Tasks", placeholder: "Add a task for today e.g. Read 10 pages" },
+  { key: "weekly", label: "Week", title: "Weekly Goals", placeholder: "Add a weekly goal e.g. Exercise 3 times" },
+  { key: "monthly", label: "Month", title: "Monthly Goals", placeholder: "Add a monthly goal e.g. Finish 2 books" },
+  { key: "yearly", label: "Year", title: "Yearly Goals", placeholder: "Add a yearly goal e.g. Read 12 books" }
+];
+
+let goals = loadGoals();
+let activeLevel = "daily";
+
+function loadGoals() {
+  let data = {};
+  try {
+    data = JSON.parse(localStorage.getItem(GOALS_KEY)) || {};
+  } catch (error) {
+    data = {};
+  }
+  GOAL_LEVELS.forEach(function (level) {
+    if (!Array.isArray(data[level.key])) data[level.key] = [];
+  });
+  return data;
+}
+
+function saveGoals() {
+  localStorage.setItem(GOALS_KEY, JSON.stringify(goals));
+}
+
+function showGoalMessage(text) {
+  goalMessage.textContent = text;
+  goalMessage.classList.remove("hidden");
+  setTimeout(function () {
+    goalMessage.classList.add("hidden");
+  }, 3000);
+}
+
+function renderGoalTabs() {
+  goalTabs.innerHTML = GOAL_LEVELS.map(function (level) {
+    return (
+      '<button class="goal-tab' + (level.key === activeLevel ? " active" : "") + '" data-level="' + level.key + '">' +
+        level.label +      "</button>"
+    );
+  }).join("");
+}
+
+function renderGoalPanels() {
+  goalPanels.innerHTML = GOAL_LEVELS.map(function (level) {
+    const list = goals[level.key];
+    const done = list.filter(function (g) { return g.done; }).length;
+    const percent = list.length ? Math.round((done / list.length) * 100) : 0;
+
+    const items = list.length
+      ? list.map(function (g) {
+          return (
+            '<div class="goal-item' + (g.done ? " is-done" : "") + '" data-id="' + g.id + '">' +
+              '<button class="goal-check' + (g.done ? " done" : "") + '" data-action="toggle">✓</button>' +
+              '<span class="goal-text">' + escapeHtml(g.text) + "</span>" +
+              '<button class="goal-edit" data-action="edit">✎</button>' +
+              '<button class="goal-delete" data-action="delete">✕</button>' +
+            "</div>"
+          );
+        }).join("")
+      : '<p class="goal-empty">Nothing here yet. Add your first one above. 🎯</p>';
+
+    return (
+      '<div class="goal-panel' + (level.key === activeLevel ? "" : " hidden") + '" data-level="' + level.key + '">' +
+        '<h3 class="panel-title">' + level.title + "</h3>" +
+        '<div class="goal-add">' +
+          '<input data-input="' + level.key + '" maxlength="80" placeholder="' + level.placeholder + '" />' +
+          '<button class="btn btn-primary" data-add="' + level.key + '">Add</button>' +
+        "</div>" +
+        '<div class="progress"><span style="width:' + percent + '%"></span></div>' +
+        '<p class="progress-text">' + done + " of " + list.length + " completed (" + percent + "%)</p>" +
+        '<div class="goal-list">' + items + "</div>" +
+      "</div>"
+    );
+  }).join("");
+}
+
+function addGoal(level, text) {
+  const clean = text.trim();
+  if (!clean) return;
+
+  goals[level].push({
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    text: clean,
+    done: false
+  });
+
+  saveGoals();  renderGoalPanels();
+  showGoalMessage("Goal added. Break it into smaller steps! 🎯");
+}
+
+goalTabs.addEventListener("click", function (event) {
+  const tab = event.target.closest(".goal-tab");
+  if (!tab) return;
+  activeLevel = tab.getAttribute("data-level");
+  renderGoalTabs();
+  renderGoalPanels();
+});
+
+goalPanels.addEventListener("click", function (event) {
+  const addBtn = event.target.closest("button[data-add]");
+  if (addBtn) {
+    const level = addBtn.getAttribute("data-add");
+    const input = goalPanels.querySelector('input[data-input="' + level + '"]');
+    addGoal(level, input.value);
+    input.value = "";
+    return;
+  }
+
+  const actionBtn = event.target.closest("button[data-action]");
+  if (!actionBtn) return;
+
+  const item = actionBtn.closest(".goal-item");
+  const id = item.getAttribute("data-id");
+  const levelKey = actionBtn.closest(".goal-panel").getAttribute("data-level");
+  const goal = goals[levelKey].find(function (g) { return g.id === id; });
+  if (!goal) return;
+
+  const action = actionBtn.getAttribute("data-action");
+
+  if (action === "toggle") {
+    goal.done = !goal.done;
+    if (goal.done) showGoalMessage("🎯 Completed! Great work.");
+    saveGoals();
+    renderGoalPanels();
+  }
+
+  if (action === "edit") {
+    const newText = prompt("Edit goal:", goal.text);
+    if (newText && newText.trim()) {
+      goal.text = newText.trim();
+      saveGoals();
+      renderGoalPanels();
+    }
+  }
+
+  if (action === "delete") {    if (confirm('Delete "' + goal.text + '"?')) {
+      goals[levelKey] = goals[levelKey].filter(function (g) { return g.id !== id; });
+      saveGoals();
+      renderGoalPanels();
+    }
+  }
+});
+
+goalPanels.addEventListener("keydown", function (event) {
+  if (event.key === "Enter" && event.target.matches("input[data-input]")) {
+    const level = event.target.getAttribute("data-input");
+    addGoal(level, event.target.value);
+    event.target.value = "";
+  }
+});
+
+printPlanBtn.addEventListener("click", function () {
+  printDate.textContent = "Printed on " + new Date().toDateString();
+  window.print();
+});
+
+renderGoalTabs();
+renderGoalPanels();
