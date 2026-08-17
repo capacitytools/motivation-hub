@@ -149,18 +149,22 @@ const isStandalone =
 
 const isIOS = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
 
+/* If the app is opened from the home screen, mark it as installed */
+if (isStandalone) {
+  localStorage.setItem("tmh_installed", "yes");
+}
+
+const isInstalled = localStorage.getItem("tmh_installed") === "yes";
+
 function showInstallBanner() {
-  const dismissed = localStorage.getItem("tmh_install_dismissed");
-  if (!isStandalone && !dismissed) {
+  /* Show on EVERY visit until the app is installed */
+  if (!isStandalone && !isInstalled) {
     installBanner.classList.remove("hidden");
   }
 }
 
-function hideInstallBanner(permanent) {
+function hideInstallBanner() {
   installBanner.classList.add("hidden");
-  if (permanent) {
-    localStorage.setItem("tmh_install_dismissed", "yes");
-  }
 }
 
 window.addEventListener("beforeinstallprompt", function (event) {
@@ -169,8 +173,10 @@ window.addEventListener("beforeinstallprompt", function (event) {
   showInstallBanner();
 });
 
+/* When the user installs the app, stop the banner forever */
 window.addEventListener("appinstalled", function () {
-  hideInstallBanner(true);
+  localStorage.setItem("tmh_installed", "yes");
+  hideInstallBanner();
 });
 
 installBtn.addEventListener("click", async function () {
@@ -178,23 +184,24 @@ installBtn.addEventListener("click", async function () {
     deferredPrompt.prompt();
     const choice = await deferredPrompt.userChoice;
     if (choice.outcome === "accepted") {
-      hideInstallBanner(true);
+      localStorage.setItem("tmh_installed", "yes");
+      hideInstallBanner();
     }
     deferredPrompt = null;
   } else {
+    /* No native prompt available: show manual instructions */
     if (isIOS) {
       installHint.textContent = 'Tap the Share button, then choose "Add to Home Screen".';
     } else {
       installHint.textContent = 'Tap your browser menu (⋮), then choose "Install app" or "Add to Home screen".';
-    }
-  }
+    }  }
 });
 
-installClose.addEventListener("click", function () {
-  hideInstallBanner(true);
-});
+/* ✕ only hides it for THIS visit. It returns on the next visit. */
+installClose.addEventListener("click", hideInstallBanner);
 
-/* Show banner on first visit */window.addEventListener("load", function () {
+/* Show the banner on every page load */
+window.addEventListener("load", function () {
   setTimeout(showInstallBanner, 1200);
 });
 
