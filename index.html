@@ -96,13 +96,27 @@
         </div>
       </div>
     </section>
-    <!-- HABITS -->
+    <!-- HABIT TRACKER -->
     <section id="habits" class="section tools-section">
       <div class="container">
         <h2>Habit Tracker</h2>
         <p class="section-subtitle">Build streaks that build your life.</p>
-        <div class="card coming-soon">
-          <p>✅ Coming in the next update: daily check-ins, streak counter, and badges.</p>
+
+        <div class="card habits-card">
+          <div class="habit-add">
+            <input id="habitInput" type="text" maxlength="60" placeholder="Add a habit e.g. Read 10 pages" />
+            <button id="addHabitBtn" class="btn btn-primary">Add</button>
+          </div>
+
+          <div id="quickHabits" class="quick-habits"></div>
+
+          <div id="habitList" class="habit-list"></div>
+
+          <div id="emptyHabits" class="empty-state">
+            <p>No habits yet. Add your first habit above. 🌱</p>
+          </div>
+
+          <p id="habitMessage" class="habit-message hidden"></p>
         </div>
       </div>
     </section>
@@ -131,8 +145,7 @@
   </main>
 
   <!-- BOTTOM MENU -->
-  <nav class="bottom-nav">
-    <a href="#home" class="active"><span class="nav-icon">🏠</span>Home</a>
+  <nav class="bottom-nav">    <a href="#home" class="active"><span class="nav-icon">🏠</span>Home</a>
     <a href="#motivation"><span class="nav-icon">💡</span>Motivation</a>
     <a href="#habits"><span class="nav-icon">✅</span>Habits</a>
     <a href="#goals"><span class="nav-icon">🎯</span>Goals</a>
@@ -145,7 +158,8 @@
       <p>Helping people build better habits, one day at a time.</p>
       <p class="credits">
         Platform Owner: Abiodun Goodness<br />
-        Developer: Akinsuroju Olubunmi      </p>
+        Developer: Akinsuroju Olubunmi
+      </p>
     </div>
   </footer>
 
